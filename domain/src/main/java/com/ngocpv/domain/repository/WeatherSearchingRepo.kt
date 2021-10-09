@@ -1,5 +1,7 @@
 package com.ngocpv.domain.repository
 
+import com.ngocpv.domain.entity.WeatherCondition
+
 interface WeatherSearchingRepo {
-    fun searchWeatherFromCityName(cityName : String) : ResponseHandler<String>
+    suspend fun searchWeatherFromCityName(cityName : String) : ResponseHandler<WeatherCondition>
 }

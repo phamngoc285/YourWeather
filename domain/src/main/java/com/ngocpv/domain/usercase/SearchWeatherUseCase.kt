@@ -1,8 +1,12 @@
 package com.ngocpv.domain.usercase
 
-class SearchWeatherUseCase : BaseUseCase<String, String>() {
+import com.ngocpv.domain.entity.WeatherCondition
+import com.ngocpv.domain.repository.ResponseHandler
+import com.ngocpv.domain.repository.WeatherSearchingRepo
 
-    override suspend fun invoke(param: String): String {
-        TODO("Not yet implemented")
+class SearchWeatherUseCase(private val weatherSearchingRepo : WeatherSearchingRepo) : BaseUseCase<String, ResponseHandler<WeatherCondition>>() {
+
+    override suspend fun invoke(cityName: String): ResponseHandler<WeatherCondition> {
+        return weatherSearchingRepo.searchWeatherFromCityName(cityName)
     }
 }
