@@ -2,9 +2,7 @@ package com.ngocpv.data.repository
 
 import android.util.Log
 import com.ngocpv.data.BaseRepositoryImp
-import com.ngocpv.data.model.BaseResponse
 import com.ngocpv.data.model.SearchWeatherResponse
-import com.ngocpv.data.source.API_KEY
 import com.ngocpv.data.source.DataService
 import com.ngocpv.domain.entity.WeatherCondition
 import com.ngocpv.domain.repository.ResponseHandler
@@ -15,11 +13,9 @@ import kotlinx.coroutines.withContext
 class WeatherSearchingRepoImpl(private val service: DataService) : BaseRepositoryImp() , WeatherSearchingRepo {
     override suspend fun searchWeatherFromCityName(cityName: String): ResponseHandler<WeatherCondition> {
         return callAPI {
-            //val result = service.searchWeather(cityName, API_KEY)
-            val result = service.searchWeather(cityName, API_KEY)
+            val result = service.searchWeather(cityName)
             Log.d("ngocpv1", "result $result")
             result
-            //ResponseA()
         }
     }
 
@@ -28,11 +24,14 @@ class WeatherSearchingRepoImpl(private val service: DataService) : BaseRepositor
             val response = withContext(Dispatchers.IO) {
                 apiToCall()
             }
-            ResponseHandler.Success(response.toDomainEntity())
+            when(response.cod){
+                200 -> ResponseHandler.Success(response.toDomainEntity())
+                else -> ResponseHandler.Failure(response.message)
+            }
         } catch (ex : Exception){
             Log.d("ngocpv", "ex $ex")
             ex.printStackTrace()
-            ResponseHandler.Failure()
+            ResponseHandler.Failure("Something wrong! Try again. $ex")
         }
     }
 }

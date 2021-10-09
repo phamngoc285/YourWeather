@@ -42,11 +42,13 @@ class WeatherSearchingFragment : Fragment() {
                 is ResponseHandler.Success -> displayWeatherResult(it.data)
 
                 is ResponseHandler.Failure -> {
-                    binding.message.text = "Error. Try again."
+                    binding.message.text = it.error
+                    binding.message.visibility = View.VISIBLE
                 }
 
                 is ResponseHandler.Loading -> {
                     binding.message.text = "Loading..."
+                    binding.message.visibility = View.VISIBLE
                 }
                 else -> {
                     binding.message.visibility = View.GONE
@@ -56,8 +58,8 @@ class WeatherSearchingFragment : Fragment() {
     }
 
     private fun displayWeatherResult(weatherCondition: WeatherCondition){
-
-        binding.message.text = """Here are the weather condition for ${weatherCondition.name}:
+        binding.message.visibility = View.VISIBLE
+        binding.message.text = """Here is the weather condition in ${weatherCondition.name}:
         
         Weather: 
             Main : ${weatherCondition.weather.main}

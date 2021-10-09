@@ -5,16 +5,15 @@ import com.google.gson.annotations.SerializedName
 import com.ngocpv.domain.entity.BaseDomainEntity
 import com.ngocpv.domain.entity.WeatherCondition
 
-abstract class BaseResponse{
-        @SerializedName("")
-        @Expose
-        var cod : Int  = 0
-        @SerializedName("message")
-        @Expose
-        var message : String = ""
-}
+abstract class BaseResponse
 
 data class SearchWeatherResponse (
+        @SerializedName("cod")
+        @Expose
+        var cod : Int  = 0,
+        @SerializedName("message")
+        @Expose
+        var message : String = "",
         @SerializedName("weather")
         @Expose
         val weather : List<Weather>,
