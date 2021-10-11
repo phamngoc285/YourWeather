@@ -1,11 +1,7 @@
 package com.ngocpv.data.source.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.ngocpv.data.entity.WeatherInformationEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WeatherDao {
@@ -17,4 +13,7 @@ interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWeather(weatherInformationEntity: WeatherInformationEntity)
+
+    @Query("delete from WeatherInformationEntity where :currentTimestamp - timestamp > :validDuration")
+    fun deleteOutdatedWeatherInformation(currentTimestamp: Long, validDuration: Int)
 }

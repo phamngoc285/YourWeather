@@ -2,7 +2,6 @@ package com.ngocpv.data.repository
 
 import android.util.Log
 import com.ngocpv.data.BaseRepositoryImp
-import com.ngocpv.data.entity.WeatherInformationEntity
 import com.ngocpv.data.model.SearchWeatherResponse
 import com.ngocpv.data.source.DataService
 import com.ngocpv.data.source.database.WeatherDao
@@ -32,6 +31,10 @@ class WeatherSearchingRepoImpl(
         else
             null
 
+    }
+
+    override fun refineLocalData() {
+        weatherDao.deleteOutdatedWeatherInformation(System.currentTimeMillis(), LOCAL_RESULT_VALID_DURATION)
     }
 
     private suspend inline fun callAPI(weatherDao: WeatherDao, crossinline apiToCall: suspend ()  -> SearchWeatherResponse) : ResponseHandler<WeatherInformation>{

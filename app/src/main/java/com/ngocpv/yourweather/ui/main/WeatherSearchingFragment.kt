@@ -35,6 +35,11 @@ class WeatherSearchingFragment : Fragment() {
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onViewResumed()
+    }
+
     private fun observeViewModel(){
         viewModel.resultLiveData.observe(viewLifecycleOwner){
             when(it){
