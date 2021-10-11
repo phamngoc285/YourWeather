@@ -1,13 +1,12 @@
 package com.ngocpv.yourweather.ui.main
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.yourweather.databinding.WeatherSearchingFragmentBinding
-import com.ngocpv.domain.entity.WeatherCondition
+import com.ngocpv.domain.entity.WeatherInformation
 import com.ngocpv.domain.repository.ResponseHandler
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -50,6 +49,7 @@ class WeatherSearchingFragment : Fragment() {
                     binding.message.text = "Loading..."
                     binding.message.visibility = View.VISIBLE
                 }
+
                 else -> {
                     binding.message.visibility = View.GONE
                 }
@@ -57,27 +57,27 @@ class WeatherSearchingFragment : Fragment() {
         }
     }
 
-    private fun displayWeatherResult(weatherCondition: WeatherCondition){
+    private fun displayWeatherResult(weatherInformation: WeatherInformation){
         binding.message.visibility = View.VISIBLE
-        binding.message.text = """Here is the weather condition in ${weatherCondition.name}:
+        binding.message.text = """Here is the weather condition in ${weatherInformation.name}:
         
         Weather: 
-            Main : ${weatherCondition.weather.main}
-            Desription: ${weatherCondition.weather.description}
+            Main : ${weatherInformation.weather.main}
+            Desription: ${weatherInformation.weather.description}
         
-        Base: ${weatherCondition.base}
+        Base: ${weatherInformation.base}
         
         Main: 
-            Temperature: ${weatherCondition.main.temp}
-            Temperature max: ${weatherCondition.main.temp_max}
-            Temperature min: ${weatherCondition.main.temp_min}
-            Pressure: ${weatherCondition.main.pressure}
-            Humidity: ${weatherCondition.main.humidity}
+            Temperature: ${weatherInformation.main.temp}
+            Temperature max: ${weatherInformation.main.temp_max}
+            Temperature min: ${weatherInformation.main.temp_min}
+            Pressure: ${weatherInformation.main.pressure}
+            Humidity: ${weatherInformation.main.humidity}
             
-        Visibility: ${weatherCondition.visibility}
+        Visibility: ${weatherInformation.visibility}
         
         Wind:
-            Speed: ${weatherCondition.wind.speed}
+            Speed: ${weatherInformation.wind.speed}
     """
 
     }

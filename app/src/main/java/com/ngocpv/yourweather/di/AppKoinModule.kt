@@ -13,7 +13,7 @@ val appModule = module {
 
 fun getDI(): List<Module> {
     return mutableListOf(appModule).also {
-        it.addAll(getDataDI())
         it.addAll(getDomainDI())
+        it.addAll(getDataDI())
     }
 }

@@ -2,8 +2,8 @@ package com.ngocpv.data.model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.ngocpv.domain.entity.BaseDomainEntity
-import com.ngocpv.domain.entity.WeatherCondition
+import com.ngocpv.data.entity.WeatherInformationEntity
+import com.ngocpv.domain.entity.WeatherInformation
 
 abstract class BaseResponse
 
@@ -34,8 +34,8 @@ data class SearchWeatherResponse (
         val name : String
         ) : BaseResponse() {
 
-        fun toDomainEntity(): WeatherCondition {
-                return WeatherCondition(
+        fun toDomainEntity(): WeatherInformation {
+                return WeatherInformation(
                         weather.toDomainEntity().first(),
                         base,
                         main.toDomainEntity(),
@@ -44,9 +44,24 @@ data class SearchWeatherResponse (
                         name
                 )
         }
+
+        fun toDAOEntity() = WeatherInformationEntity(
+                name,
+                weather.firstOrNull()?.main ?: "",
+                weather.firstOrNull()?.description ?: "",
+                base,
+                main.temp,
+                main.pressure,
+                main.humidity,
+                main.temp_min,
+                main.temp_max,
+                visibility,
+                wind.speed,
+                wind.deg
+        )
 }
 
-fun List<Weather>.toDomainEntity() : List<com.ngocpv.domain.entity.Weather>{
+fun List<Weather>.toDomainEntity() : List<WeatherInformation.Weather>{
         return this.map { it.toDomainEntity() }
 }
 
@@ -58,7 +73,7 @@ data class Weather(
         @Expose
         val description : String
 ){
-        fun toDomainEntity() = com.ngocpv.domain.entity.Weather(main, description)
+        fun toDomainEntity() = WeatherInformation.Weather(main, description)
 }
 
 data class Main(
@@ -78,7 +93,7 @@ data class Main(
         @Expose
         val temp_max : Float
 ){
-        fun toDomainEntity() = com.ngocpv.domain.entity.Main(temp, pressure, humidity, temp_min, temp_max)
+        fun toDomainEntity() = WeatherInformation.Main(temp, pressure, humidity, temp_min, temp_max)
 }
 
 data class Wind(
@@ -89,5 +104,5 @@ data class Wind(
         @Expose
         val deg : Float
 ){
-        fun toDomainEntity() = com.ngocpv.domain.entity.Wind(speed, deg)
+        fun toDomainEntity() = WeatherInformation.Wind(speed, deg)
 }
