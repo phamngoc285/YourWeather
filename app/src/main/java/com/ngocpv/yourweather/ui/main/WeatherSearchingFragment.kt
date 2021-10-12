@@ -64,11 +64,11 @@ class WeatherSearchingFragment : Fragment() {
 
     private fun displayWeatherResult(weatherInformation: WeatherInformation){
         binding.message.visibility = View.VISIBLE
-        binding.message.text = """Here is the weather condition in ${weatherInformation.name}:
+        binding.message.text = """Here is the weather in ${weatherInformation.name}:
         
         Weather: 
             Main : ${weatherInformation.weather.main}
-            Desription: ${weatherInformation.weather.description}
+            Description: ${weatherInformation.weather.description}
         
         Base: ${weatherInformation.base}
         

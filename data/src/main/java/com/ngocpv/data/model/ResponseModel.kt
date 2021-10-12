@@ -5,33 +5,36 @@ import com.google.gson.annotations.SerializedName
 import com.ngocpv.data.entity.WeatherInformationEntity
 import com.ngocpv.domain.entity.WeatherInformation
 
-abstract class BaseResponse
-
-data class SearchWeatherResponse (
+abstract class BaseResponse(
         @SerializedName("cod")
         @Expose
         var cod : Int  = 0,
         @SerializedName("message")
         @Expose
-        var message : String = "",
+        var message : String = ""
+)
+
+class ErrorResponse constructor(cod: Int, message: String): BaseResponse(cod, message)
+
+data class SearchWeatherResponse (
         @SerializedName("weather")
         @Expose
-        val weather : List<Weather>,
+        val weather : List<Weather> = listOf(),
         @SerializedName("base")
         @Expose
-        val base : String,
+        val base : String = "",
         @SerializedName("main")
         @Expose
-        val main : Main,
+        val main : Main = Main(0f,0,0,0f,0f),
         @SerializedName("visibility")
         @Expose
-        val visibility : Int,
+        val visibility : Int = 0,
         @SerializedName("wind")
         @Expose
-        val wind : Wind,
+        val wind : Wind = Wind(0f,0f),
         @SerializedName("name")
         @Expose
-        val name : String
+        val name : String = ""
         ) : BaseResponse() {
 
         fun toDomainEntity(): WeatherInformation {

@@ -1,4 +1,4 @@
-package com.ngocpv.data
+package com.ngocpv.data.repository
 
 abstract class BaseRepositoryImp {
 }
