@@ -11,10 +11,10 @@ class SearchWeatherUseCase(private val weatherSearchingRepo : WeatherSearchingRe
     override suspend fun invoke(cityName: String): Flow<ResponseHandler<WeatherInformation>> = flow {
         emit(ResponseHandler.Loading)
 
-        val localResult = weatherSearchingRepo.getLocalWeatherFromCityName(cityName)
-        if(localResult != null)
-            emit(ResponseHandler.Success(localResult))
-        else
+//        val localResult = weatherSearchingRepo.getLocalWeatherFromCityName(cityName, LOCAL_RESULT_VALID_DURATION)
+//        if(localResult != null)
+//            emit(ResponseHandler.Success(localResult))
+//        else
             emit(weatherSearchingRepo.searchWeatherFromCityName(cityName))
     }
 

@@ -21,13 +21,13 @@ data class WeatherInformationEntity(
     val timestamp : Long = 0,
     ) {
 
-    fun toDomainModel() = WeatherInformation(
-        WeatherInformation.Weather(weatherMain, weatherDescription),
-        base,
-        WeatherInformation.Main(mainTemp, mainPressure, mainHumidity, mainTempMin, mainTempMax),
-        visibility,
-        WeatherInformation.Wind(windSpeed, windDeg),
-        name,
-        timestamp
-    )
+//    fun toDomainModel() = WeatherInformation(
+//        WeatherInformation.Weather(weatherMain, weatherDescription),
+//        base,
+//        WeatherInformation.Main(mainTemp, mainPressure, mainHumidity, mainTempMin, mainTempMax),
+//        visibility,
+//        WeatherInformation.Wind(windSpeed, windDeg),
+//        name,
+//        timestamp
+//    )
 }

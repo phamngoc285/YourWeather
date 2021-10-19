@@ -6,10 +6,10 @@ interface WeatherSearchingRepo {
     suspend fun searchWeatherFromCityName(cityName : String) : ResponseHandler<WeatherInformation>
 
     /**
+     * @param timeout duration that local cache will become invalid
      * @return local valid result weather information for city name </br>
-     * The valid result is the one gotten from server no longer than [SearchWeatherUseCase.LOCAL_RESULT_VALID_DURATION] compare with current time.
      */
-    fun getLocalWeatherFromCityName(cityName: String) : WeatherInformation?
+    fun getLocalWeatherFromCityName(cityName: String, timeout : Int) : WeatherInformation?
 
     /**
      * remove outdated local data </br>

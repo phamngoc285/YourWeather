@@ -5,6 +5,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface DataService {
-    @GET("weather?")
+    @GET("forecast/daily?")
     suspend fun searchWeather(@Query("q") cityName : String) : SearchWeatherResponse
 }

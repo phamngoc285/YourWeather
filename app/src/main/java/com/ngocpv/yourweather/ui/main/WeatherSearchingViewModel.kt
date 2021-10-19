@@ -1,48 +1,51 @@
 package com.ngocpv.yourweather.ui.main
 
 import androidx.lifecycle.*
-import com.ngocpv.domain.entity.WeatherInformation
 import com.ngocpv.domain.repository.ResponseHandler
 import com.ngocpv.domain.usercase.RefineLocalDateUseCase
 import com.ngocpv.domain.usercase.SearchWeatherUseCase
+import com.ngocpv.yourweather.model.WeatherInformationUIModel
+import com.ngocpv.yourweather.transformation.toUIModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class WeatherSearchingViewModel(
         private val searchWeatherUseCase: SearchWeatherUseCase,
         private val refineLocalDateUseCase: RefineLocalDateUseCase
     ) : ViewModel() {
 
-    val resultLiveData : LiveData<ResponseHandler<WeatherInformation>>
-        get() = _resultLiveData
+    //region livedata
+    val weatherForecastLiveData : LiveData<List<WeatherInformationUIModel>>
+        get() = _weatherForecastLiveData
 
-    private val _resultLiveData = MutableLiveData<ResponseHandler<WeatherInformation>>()
+    private val _weatherForecastLiveData = MutableLiveData<List<WeatherInformationUIModel>>()
+    //endregion
 
+    //region search weather forecast use case
     fun searchWeather(cityName : String){
         val validation = validateInputSearchingWeather(cityName)
         if(validation.first) {
-            _resultLiveData.value = ResponseHandler.Failure(validation.second)
+            _weatherForecastLiveData.postValue(listOf(WeatherInformationUIModel.Error(validation.second)))
             return
         }
 
         viewModelScope.launch(Dispatchers.IO) {
             val result = searchWeatherUseCase.invoke(cityName)
-            result.collect {
-                withContext(Dispatchers.Main){
-                    _resultLiveData.value = it
+            result.collect { it ->
+                when(it){
+                    is ResponseHandler.Loading -> {
+                        _weatherForecastLiveData.postValue(listOf(WeatherInformationUIModel.Loading))
+                    }
+                    is ResponseHandler.Failure -> {
+                        _weatherForecastLiveData.postValue(listOf(WeatherInformationUIModel.Error(it.error)))
+                    }
+                    is ResponseHandler.Success -> {
+                        _weatherForecastLiveData.postValue(it.data.forecasts.map { item -> item.toUIModel() })
+                    }
                 }
             }
         }
-    }
-
-    fun onViewResumed(){
-        viewModelScope.launch(Dispatchers.IO) {
-            refineLocalDateUseCase.invoke()
-        }
-
-        viewModelScope
     }
 
     /**
@@ -58,4 +61,16 @@ class WeatherSearchingViewModel(
             else -> Pair(false, "")
         }
     }
+
+    //endregion
+
+    //region refine local cache use case
+    fun onViewResumed(){
+        viewModelScope.launch(Dispatchers.IO) {
+            refineLocalDateUseCase.invoke()
+        }
+
+        viewModelScope
+    }
+    //endregion
 }

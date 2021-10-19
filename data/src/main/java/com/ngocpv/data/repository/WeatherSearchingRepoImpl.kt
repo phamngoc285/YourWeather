@@ -21,13 +21,13 @@ class WeatherSearchingRepoImpl(
         return requestData(weatherDao, cityName)
     }
 
-    override fun getLocalWeatherFromCityName(cityName: String): WeatherInformation? {
-        val localData = weatherDao.findByCityName(cityName)?.toDomainModel()
-        return if(localData != null
-                    && (System.currentTimeMillis() - localData.timeStamp) > LOCAL_RESULT_VALID_DURATION)
-            localData
-        else
-            null
+    override fun getLocalWeatherFromCityName(cityName: String, timeout : Int): WeatherInformation? {
+//        val localData = weatherDao.findByCityName(cityName)?.toDomainModel()
+//        return if(localData != null
+//                    && (System.currentTimeMillis() - localData.timeStamp) > timeout)
+//            localData
+//        else
+            return null
 
     }
 
@@ -37,13 +37,12 @@ class WeatherSearchingRepoImpl(
 
     private suspend fun requestData(weatherDao: WeatherDao, cityName: String) : ResponseHandler<WeatherInformation>{
         return try {
-            val time = System.currentTimeMillis()
             val response = withContext(Dispatchers.IO) {
                 callAPI(cityName)
             }
             when(response){
                 is SearchWeatherResponse -> {
-                    weatherDao.insertWeather(response.toDAOEntity())
+//                    weatherDao.insertWeather(response.toDAOEntity())
                     ResponseHandler.Success(response.toDomainEntity())
                 }
                 else -> ResponseHandler.Failure(response.message)
