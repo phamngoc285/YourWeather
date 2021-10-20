@@ -31,8 +31,7 @@ class WeatherSearchingViewModel(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            val result = searchWeatherUseCase.invoke(cityName)
-            result.collect { it ->
+            searchWeatherUseCase.invoke(cityName).collect { it ->
                 when(it){
                     is ResponseHandler.Loading -> {
                         _weatherForecastLiveData.postValue(listOf(WeatherInformationUIModel.Loading))

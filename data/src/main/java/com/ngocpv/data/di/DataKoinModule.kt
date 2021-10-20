@@ -3,8 +3,8 @@ package com.ngocpv.data.di
 import androidx.room.Room
 import com.ngocpv.data.repository.WeatherSearchingRepoImpl
 import com.ngocpv.data.source.database.YourWeatherDB
-import com.ngocpv.data.source.getDataService
-import com.ngocpv.data.source.provideClient
+import com.ngocpv.data.source.remote.getDataService
+import com.ngocpv.data.source.remote.provideClient
 import com.ngocpv.domain.repository.WeatherSearchingRepo
 import org.koin.core.module.Module
 import org.koin.dsl.module

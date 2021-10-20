@@ -1,5 +1,6 @@
-package com.ngocpv.data.source
+package com.ngocpv.data.source.remote
 
+import com.ngocpv.data.source.remote.DataService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,7 +25,7 @@ fun provideClient(): OkHttpClient = OkHttpClient.Builder()
             it.proceed(newRequest)
         }.build()
 
-fun getDataService(okHttpClient: OkHttpClient) : DataService{
+fun getDataService(okHttpClient: OkHttpClient) : DataService {
     return Retrofit.Builder()
         .baseUrl(DOMAIN)
         .addConverterFactory(GsonConverterFactory.create())

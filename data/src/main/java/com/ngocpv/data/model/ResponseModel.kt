@@ -21,65 +21,28 @@ data class SearchWeatherResponse (
         val city : City,
         @SerializedName("list")
         val forecasts : List<Forecast>?
-        ) : BaseResponse() {
-
-        fun toDomainEntity(): WeatherInformation {
-                return WeatherInformation(
-                        city.toDomainEntity(),
-                        forecasts?.map{ it.toDomainEntity()} ?: listOf()
-                )
-        }
-
-//        fun toDAOEntity() = WeatherInformationEntity(
-//                name,
-//                weather.firstOrNull()?.main ?: "",
-//                weather.firstOrNull()?.description ?: "",
-//                base,
-//                main.temp,
-//                main.pressure,
-//                main.humidity,
-//                main.temp_min,
-//                main.temp_max,
-//                visibility,
-//                wind.speed,
-//                wind.deg
-//        )
-}
-
-data class Forecast(
-        @SerializedName("dt")
-        val dateTime : Long,
-        val weather : List<Weather>,
-        val pressure : Int,
-        @SerializedName("temp")
-        val temperature: Temperature,
-        val humidity : Int,
-) {
-        fun toDomainEntity() = WeatherInformation.Forecast(
-                DatetimeUtil.getDateTime(dateTime) ?: "",
-                weather.first().toDomainEntity(),
-                pressure,
-                temperature.toDomainEntity(),
-                humidity
+) : BaseResponse() {
+        data class Forecast(
+                @SerializedName("dt")
+                val dateTime: Long,
+                val weather: List<Weather>,
+                val pressure: Int,
+                @SerializedName("temp")
+                val temperature: Temperature,
+                val humidity: Int,
         )
-}
 
-data class City(
-        val name : String
-) {
-        fun toDomainEntity() = WeatherInformation.City(name)
-}
+        data class City(
+                val name: String
+        )
 
-data class Weather(
-        val main: String,
-        val description: String
-){
-        fun toDomainEntity() = WeatherInformation.Weather(main, description)
-}
+        data class Weather(
+                val main: String,
+                val description: String
+        )
 
-data class Temperature(
-        val min: Float,
-        val max : Float
-) {
-        fun toDomainEntity() = WeatherInformation.Temperature(min, max)
+        data class Temperature(
+                val min: Float,
+                val max: Float
+        )
 }

@@ -3,7 +3,7 @@ package com.ngocpv.domain.entity
 data class WeatherInformation (
     val city : City,
     val forecasts : List<Forecast>,
-    val timeStamp : Long = 0
+    var fetchedTime : Long = 0
 ) : BaseDomainEntity() {
 
     data class Forecast(
@@ -26,6 +26,5 @@ data class WeatherInformation (
     data class Temperature(
         val min: Float,
         val max : Float,
-
     )
 }
