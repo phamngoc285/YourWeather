@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yourweather.databinding.WeatherSearchingFragmentBinding
-import com.ngocpv.domain.entity.WeatherInformation
-import com.ngocpv.domain.repository.ResponseHandler
 import com.ngocpv.yourweather.adapter.WeatherForecastAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,6 +25,8 @@ class WeatherSearchingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = WeatherSearchingFragmentBinding.inflate(inflater)
+        binding.searchView.requestFocus()
+        binding.searchView.onActionViewExpanded()
         binding.searchBtn.setOnClickListener {
             viewModel.searchWeather(binding.searchView.query.toString())
         }

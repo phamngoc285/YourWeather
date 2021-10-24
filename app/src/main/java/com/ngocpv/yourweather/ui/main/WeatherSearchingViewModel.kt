@@ -1,18 +1,23 @@
 package com.ngocpv.yourweather.ui.main
 
+import android.util.Log
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import com.ngocpv.domain.repository.ResponseHandler
 import com.ngocpv.domain.usercase.RefineLocalDateUseCase
 import com.ngocpv.domain.usercase.SearchWeatherUseCase
+import com.ngocpv.yourweather.coroutinecontextprovider.CoroutineContextProvider
 import com.ngocpv.yourweather.model.WeatherInformationUIModel
 import com.ngocpv.yourweather.transformation.toUIModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WeatherSearchingViewModel(
         private val searchWeatherUseCase: SearchWeatherUseCase,
-        private val refineLocalDateUseCase: RefineLocalDateUseCase
+        private val refineLocalDateUseCase: RefineLocalDateUseCase,
+        private val coroutineContextProvider: CoroutineContextProvider
     ) : ViewModel() {
 
     //region livedata
@@ -25,12 +30,12 @@ class WeatherSearchingViewModel(
     //region search weather forecast use case
     fun searchWeather(cityName : String){
         val validation = validateInputSearchingWeather(cityName)
-        if(validation.first) {
+        if(!validation.first) {
             _weatherForecastLiveData.postValue(listOf(WeatherInformationUIModel.Error(validation.second)))
             return
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContextProvider.IO) {
             searchWeatherUseCase.invoke(cityName).collect { it ->
                 when(it){
                     is ResponseHandler.Loading -> {
@@ -49,15 +54,16 @@ class WeatherSearchingViewModel(
 
     /**
      * Validate input for city name.
-     * @return a pair of Boolean and String </br>
-     * First value is whether input is valid </br>
-     * Second value is the error string if any
+     * @return a pair of Boolean and String <br>
+     * First value is whether input is valid <br>
+     * Second value is the error string (if any)
      */
-    private fun validateInputSearchingWeather(input : String?) : Pair<Boolean, String> {
+    @VisibleForTesting
+    fun validateInputSearchingWeather(input : String?) : Pair<Boolean, String> {
         return when {
-            input.isNullOrBlank() -> Pair (true, "Please enter a city name")
-            input.length <= 3 -> Pair(true, "City name must be longer than 3 characters")
-            else -> Pair(false, "")
+            input.isNullOrBlank() -> Pair (false, "Please enter a city name")
+            input.length < MINIMUM_SEARCH_INPUT_CHARACTERS -> Pair(false, "City name must be longer than ${MINIMUM_SEARCH_INPUT_CHARACTERS - 1} characters")
+            else -> Pair(true, "")
         }
     }
 
@@ -65,11 +71,13 @@ class WeatherSearchingViewModel(
 
     //region refine local cache use case
     fun onViewResumed(){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContextProvider.IO) {
             refineLocalDateUseCase.invoke()
         }
-
-        viewModelScope
     }
     //endregion
+
+    companion object {
+        const val MINIMUM_SEARCH_INPUT_CHARACTERS = 4
+    }
 }
